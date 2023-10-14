@@ -17,6 +17,7 @@ import com.example.observabilitydemo.post.Post;
 
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
+import io.micrometer.observation.annotation.Observed;
 
 @SpringBootApplication
 public class ObservabilityDemoApplication {
@@ -33,7 +34,7 @@ public class ObservabilityDemoApplication {
 		HttpServiceProxyFactory factory = HttpServiceProxyFactory.builderFor(RestClientAdapter.create(restClient)).build();
 		return factory.createClient(JsonPlaceholderService.class);
 	}
-
+	
 	@Bean
 	CommandLineRunner commandLineRunner(JsonPlaceholderService jsonPlaceholderService, ObservationRegistry observationRegistry) {
 		return args -> {
@@ -46,4 +47,19 @@ public class ObservabilityDemoApplication {
 			});
 		};
 	}
+
+	/*
+	 * The following bean is same as the above commandLineRunner bean
+	 * The only difference here is all the code for observability is replaced with @Observed annotation
+	 * AOP dependency needs to be added to the project in order to make this work
+	 * Unfortunately, due to some unknown reasons, this method didn't work and zipkin did not observe this call
+	 */
+
+	// @Bean
+	// @Observed(name = "posts.load-all-posts", contextualName = "post.find-all")
+	// CommandLineRunner commandLineRunner(JsonPlaceholderService jsonPlaceholderService) {
+	// 	return args -> {
+	// 		jsonPlaceholderService.findAll();
+	// 	};
+	// }
 }
