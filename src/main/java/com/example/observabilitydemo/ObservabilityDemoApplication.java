@@ -15,6 +15,9 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 import com.example.observabilitydemo.post.JsonPlaceholderService;
 import com.example.observabilitydemo.post.Post;
 
+import io.micrometer.observation.Observation;
+import io.micrometer.observation.ObservationRegistry;
+
 @SpringBootApplication
 public class ObservabilityDemoApplication {
 
@@ -32,10 +35,14 @@ public class ObservabilityDemoApplication {
 	}
 
 	@Bean
-	CommandLineRunner commandLineRunner(JsonPlaceholderService jsonPlaceholderService) {
+	CommandLineRunner commandLineRunner(JsonPlaceholderService jsonPlaceholderService, ObservationRegistry observationRegistry) {
 		return args -> {
-			List<Post> posts = jsonPlaceholderService.findAll();
-			log.info("Posts: {}", posts.size());
+			Observation.createNotStarted("posts.load-all-posts", observationRegistry)
+			.lowCardinalityKeyValue("author", "Anna")
+			.contextualName("post-service.find-all")
+			.observe(jsonPlaceholderService::findAll);
+			// List<Post> posts = jsonPlaceholderService.findAll();
+			// log.info("Posts: {}", posts.size());
 		};
 	}
 }
