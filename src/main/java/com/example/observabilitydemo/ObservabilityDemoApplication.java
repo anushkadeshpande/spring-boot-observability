@@ -40,9 +40,10 @@ public class ObservabilityDemoApplication {
 			Observation.createNotStarted("posts.load-all-posts", observationRegistry)
 			.lowCardinalityKeyValue("author", "Anna")
 			.contextualName("post-service.find-all")
-			.observe(jsonPlaceholderService::findAll);
-			// List<Post> posts = jsonPlaceholderService.findAll();
-			// log.info("Posts: {}", posts.size());
+			.observe(() -> {
+				List<Post> posts = jsonPlaceholderService.findAll();
+				log.info("Posts: {}", posts.size());
+			});
 		};
 	}
 }
