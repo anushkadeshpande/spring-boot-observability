@@ -22,7 +22,7 @@ public class PostController {
         return jsonPlaceholderService.findAll();
     }
 
-    @GetMapping("/id")
+    @GetMapping("/{id}")
     Post findById(@PathVariable Integer id) {
         return jsonPlaceholderService.findById(id);
     }
