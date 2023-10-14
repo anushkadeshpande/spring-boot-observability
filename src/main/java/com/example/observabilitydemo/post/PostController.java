@@ -3,6 +3,7 @@ package com.example.observabilitydemo.post;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,5 +20,10 @@ public class PostController {
     @GetMapping
     List<Post> findAll() {
         return jsonPlaceholderService.findAll();
+    }
+
+    @GetMapping("/id")
+    Post findById(@PathVariable Integer id) {
+        return jsonPlaceholderService.findById(id);
     }
 }
